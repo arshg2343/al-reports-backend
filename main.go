@@ -17,7 +17,7 @@ func main() {
 		Cloudinary: reporthandler.CloudinaryConfig{
 			CloudURL: os.Getenv("CLOUD_URL"),
 		},
-		DatabaseURL: os.Getenv("DB_URL"),
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 	})
 	if err != nil {
 		log.Fatalf("Initialization error: %v", err)
