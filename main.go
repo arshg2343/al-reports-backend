@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -14,9 +15,9 @@ func main() {
 
 	err := reporthandler.Initialize(reporthandler.Config{
 		Cloudinary: reporthandler.CloudinaryConfig{
-			CloudURL: "cloudinary://715997977375351:i-lE-9w2nbNuc0i6l25lwVw-PkE@dl0n4fqcs",
+			CloudURL: os.Getenv("CLOUD_URL"),
 		},
-		DatabasePath: "", // Optional: leave empty for default
+		DatabaseURL: os.Getenv("DB_URL"),
 	})
 	if err != nil {
 		log.Fatalf("Initialization error: %v", err)
