@@ -10,6 +10,7 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -23,8 +24,13 @@ type CloudinaryConfig struct {
 	CloudURL string
 }
 
+// Add uid to Reports.
+
+// Send confirmation mail after receiving report.
+
 type Report struct {
 	gorm.Model
+	UID               string `gorm:"not null;unique"`
 	Email             string `gorm:"not null"`
 	Username          string `gorm:"not null"`
 	DeviceType        string `gorm:"not null"`
@@ -70,6 +76,7 @@ func New(email, username, deviceType, browserInfo, glitchType, glitchLocation, g
 	}
 
 	return &Report{
+		UID:               uuid.New().String(),
 		Email:             email,
 		Username:          username,
 		DeviceType:        deviceType,
