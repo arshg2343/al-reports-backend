@@ -18,7 +18,7 @@ type Config struct {
 	DatabaseURL string
 }
 
-type DeleteRequest struct {
+type Request struct {
 	UID string `json:"uid"`
 }
 
@@ -46,14 +46,14 @@ func FetchPendingReports(c *gin.Context) {
 }
 
 func DeleteReport(c *gin.Context) {
-	var delete DeleteRequest
+	var delete Request
 	err := c.ShouldBindJSON(&delete)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Inavlid Request Format",
 		})
 	}
-	result := db.Where("uid = ?", delete.UID).Delete(&reporthandler.Report{})
+	result := deleteReportByUID(delete.UID)
 	if result.Error != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("Failed to delete report: %v", result.Error))
 		return
@@ -68,6 +68,23 @@ func DeleteReport(c *gin.Context) {
 	})
 }
 
-func SendResolvedEmail() {
-	// POST handler with issue resolvement
+func ResolveReport(c *gin.Context) {
+	var resolve Request
+	err := c.ShouldBindJSON(&resolve)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Inavlid Request Format",
+		})
+	}
+	sendResolvedEmail()
+	deleteReportByUID(resolve.UID)
+}
+
+func sendResolvedEmail() {
+	// send issue resolved mail
+}
+
+func deleteReportByUID(uid string) *gorm.DB {
+	result := db.Where("uid = ?", uid).Delete(&reporthandler.Report{})
+	return result
 }
