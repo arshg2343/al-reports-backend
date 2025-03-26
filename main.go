@@ -8,10 +8,17 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	// "github.com/joho/godotenv"
+
+	"aetherlabs.com/glitch-report/dashboard"
 	reporthandler "aetherlabs.com/glitch-report/report-handler"
 )
 
 func main() {
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatalf("Initialization of env error: %v", err)
+	// }
 
 	err := reporthandler.Initialize(reporthandler.Config{
 		Cloudinary: reporthandler.CloudinaryConfig{
@@ -19,6 +26,11 @@ func main() {
 		},
 		DatabaseURL: os.Getenv("DATABASE_URL"),
 	})
+	if err != nil {
+		log.Fatalf("Initialization error: %v", err)
+	}
+
+	err = dashboard.Initialize(dashboard.Config{DatabaseURL: os.Getenv("DATABASE_URL")})
 	if err != nil {
 		log.Fatalf("Initialization error: %v", err)
 	}
@@ -35,6 +47,7 @@ func main() {
 	}))
 
 	server.POST("/report-glitch", reporthandler.HandleReport)
+	server.GET("/active-reports", dashboard.FetchPendingReports)
 
 	server.Run(":8080")
 }
