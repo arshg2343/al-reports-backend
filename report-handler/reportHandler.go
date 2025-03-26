@@ -30,7 +30,7 @@ type CloudinaryConfig struct {
 
 type Report struct {
 	gorm.Model
-	UID               string `gorm:"not null;unique"`
+	UID               string `gorm:"primaryKey;not null;unique"`
 	Email             string `gorm:"not null"`
 	Username          string `gorm:"not null"`
 	DeviceType        string `gorm:"not null"`
@@ -154,13 +154,4 @@ func uploadToCloudinary(file *multipart.FileHeader) (string, error) {
 	}
 
 	return uploadResult.SecureURL, nil
-}
-
-func GetAllReports() ([]Report, error) {
-	var reports []Report
-	result := db.Find(&reports)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return reports, nil
 }
