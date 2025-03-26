@@ -48,7 +48,7 @@ func main() {
 
 	server.POST("/report-glitch", reporthandler.HandleReport)
 	server.GET("/active-reports", dashboard.FetchPendingReports)
-	server.POST("/delete-report")
+	server.POST("/delete-report", dashboard.DeleteReport)
 
 	server.Run(":8080")
 }
