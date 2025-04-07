@@ -51,6 +51,7 @@ func main() {
 	server.POST("/delete-report", dashboard.DeleteReport)
 	// Handle resolving and sending email
 	server.POST("/resolve-report")
+	server.POST("/contactus")
 
 	server.Run(":8080")
 }
