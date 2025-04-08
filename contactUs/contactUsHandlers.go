@@ -16,6 +16,7 @@ type ContactUs struct {
 	Name    string `json:"name"`
 	Email   string `json:"email"`
 	Contact string `json:"contact"`
+	Type    string `json:"type"`
 	Subject string `json:"subject"`
 	Message string `json:"message"`
 }
