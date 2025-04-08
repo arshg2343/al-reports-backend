@@ -52,7 +52,7 @@ func HandleContactUs(c *gin.Context) {
 		return
 	}
 	contactUs.UID = uuid.New().String()
-	contactUs.status = "pending"
+	contactUs.Status = "pending"
 
 	err := contactUs.saveToDB()
 	if err != nil {
