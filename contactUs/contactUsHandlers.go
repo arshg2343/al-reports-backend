@@ -12,7 +12,7 @@ import (
 
 type ContactUs struct {
 	gorm.Model
-	UID     string
+	UID     string `gorm:"primaryKey;not null;unique"`
 	Name    string `json:"name"`
 	Email   string `json:"email"`
 	Contact string `json:"contact"`
