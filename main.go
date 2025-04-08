@@ -52,14 +52,14 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	server.POST("/report-glitch", reporthandler.HandleReport)
-	server.GET("/active-reports", dashboard.FetchPendingReports)
-	server.POST("/delete-report", dashboard.DeleteReport)
+	server.POST("/reports/new", reporthandler.HandleReport)
+	server.GET("/reports", dashboard.FetchPendingReports)
+	server.DELETE("/reports/delete", dashboard.DeleteReport)
 	// Handle resolving and sending email
-	server.POST("/resolve-report")
-	server.POST("/contactus", contactUs.HandleContactUs)
-	server.GET("/inquiries", dashboard.FetchPendingInquiries)
-	server.POST("/delete-inquiry", dashboard.DeleteInquiry)
+	server.POST("/reports/resolve")
+	server.POST("/contactus/new", contactUs.HandleContactUs)
+	server.GET("/contactus", dashboard.FetchPendingInquiries)
+	server.DELETE("/contactus/delete", dashboard.DeleteInquiry)
 
 	server.Run(":8080")
 }
