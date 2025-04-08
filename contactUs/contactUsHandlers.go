@@ -19,6 +19,7 @@ type ContactUs struct {
 	Type    string `json:"type"`
 	Subject string `json:"subject"`
 	Message string `json:"message"`
+	status  string
 }
 
 var (
@@ -51,6 +52,7 @@ func HandleContactUs(c *gin.Context) {
 		return
 	}
 	contactUs.UID = uuid.New().String()
+	contactUs.status = "pending"
 
 	err := contactUs.saveToDB()
 	if err != nil {
