@@ -19,7 +19,7 @@ type ContactUs struct {
 	Type    string `json:"type"`
 	Subject string `json:"subject"`
 	Message string `json:"message"`
-	status  string
+	Status  string
 }
 
 var (
