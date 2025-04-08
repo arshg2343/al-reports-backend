@@ -10,6 +10,7 @@ import (
 
 	// "github.com/joho/godotenv"
 
+	"aetherlabs.com/glitch-report/contactUs"
 	"aetherlabs.com/glitch-report/dashboard"
 	reporthandler "aetherlabs.com/glitch-report/report-handler"
 )
@@ -35,6 +36,11 @@ func main() {
 		log.Fatalf("Initialization error: %v", err)
 	}
 
+	err = contactUs.Initialize(contactUs.Config{DatabaseURL: os.Getenv("DATABASE_URL")})
+	if err != nil {
+		log.Fatalf("Initialization error: %v", err)
+	}
+
 	server := gin.Default()
 
 	server.Use(cors.New(cors.Config{
@@ -51,7 +57,9 @@ func main() {
 	server.POST("/delete-report", dashboard.DeleteReport)
 	// Handle resolving and sending email
 	server.POST("/resolve-report")
-	server.POST("/contactus")
+	server.POST("/contactus", contactUs.HandleContactUs)
+	server.GET("/inquiries", dashboard.FetchPendingInquiries)
+	server.POST("/delete-inquiry", dashboard.DeleteInquiry)
 
 	server.Run(":8080")
 }

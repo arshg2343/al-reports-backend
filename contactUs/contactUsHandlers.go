@@ -1,14 +1,20 @@
 package contactUs
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type ContactUs struct {
-	Name string `json:"name"`
-	Email string `json:"email"`
+	gorm.Model
+	UID     string
+	Name    string `json:"name"`
+	Email   string `json:"email"`
 	Contact string `json:"contact"`
 	Subject string `json:"subject"`
 	Message string `json:"message"`
@@ -29,6 +35,11 @@ func Initialize(cfg Config) error {
 		return fmt.Errorf("failed to connect to database: %v", err)
 	}
 
+	err = db.AutoMigrate(&ContactUs{})
+	if err != nil {
+		return fmt.Errorf("failed to auto-migrate database: %v", err)
+	}
+
 	return nil
 }
 
@@ -38,11 +49,22 @@ func HandleContactUs(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	contactUs.UID = uuid.New().String()
 
+	err := contactUs.saveToDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save report"})
+		return
+	}
 
+	c.JSON(http.StatusOK, gin.H{"message": "Inquiry saved successfully"})
 
 }
 
-func (contactUs *ContactUs) saveToDB() {
-	
+func (contactUs *ContactUs) saveToDB() error {
+	result := db.Create(contactUs)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
